@@ -9,7 +9,8 @@ defaults:
   # data_hash: yaml_data
 hierarchy:
   - name: "Terraform data"
-    - "terraform_data.yaml"
+    paths:
+      - "terraform_data.yaml"
   - name: "Other YAML hierarchy levels"
     paths:
       - "common.yaml"
