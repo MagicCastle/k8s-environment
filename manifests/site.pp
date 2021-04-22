@@ -6,7 +6,7 @@ node master1 {
   }
 
   class { 'kubernetes': 
-    controller => true
+    controller => true,
     require    => Class['selinux']
   }
 }

@@ -6,11 +6,14 @@ kubernetes::controller_address: "%{alias('terraform.tag_ip.master.0')}"
 kubernetes::cni_pod_cidr: 10.244.0.0/16
 kubernetes::kube_api_advertise_address: "%{alias('terraform.tag_ip.master.0')}"
 kubernetes::etcd_ip : "%{alias('terraform.tag_ip.master.0')}"
-kubernetes::etcd_peers: []
+kubernetes::etcd_peers: ['master1']
 kubernetes::etcd_initial_cluster: "master1=https://%{lookup('kubernetes::etcd_ip')}:2380"
 kubernetes::docker_package_name: docker-ce
 kubernetes::docker_version: 20.10.6-3.el7
 kubernetes::kubernetes_version: 1.20.0
+
+kubernetes::disable_swap: true
+kubernetes::cni_network_provider: 'https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml'
 
 
 kubernetes::etcd_ca_crt: |
