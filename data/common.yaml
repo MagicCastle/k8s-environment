@@ -1,4 +1,5 @@
 ---
+helm::version: 2.17.0
 kubernetes::api_server_count: 1
 kubernetes::controller_address: "%{lookup('terraform.tag_ip.master.0')}:6443"
 kubernetes::cni_pod_cidr: 10.244.0.0/16

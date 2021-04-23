@@ -22,6 +22,7 @@ END
     controller => true,
     require    => [Class['selinux'], File['/etc/hosts']]
   }
+  include 'helm'
 }
 
 node default {
