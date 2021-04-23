@@ -20,17 +20,24 @@ END
     content => inline_template($host_template)
   }
 
-  class { 'kubernetes':
-    controller => 'controller' in $tags,
-    worker     => ! 'controller' in $tags,
-    require    => [
-      Class['selinux'],
-      File['/etc/hosts']
-    ]
-  }
   if 'controller' in $tags {
+    class { 'kubernetes':
+      controller => true,
+      require    => [
+        Class['selinux'],
+        File['/etc/hosts']
+      ]
+    }
     class { 'helm':
       require => [Class['kubernetes']]
+    }
+  } else {
+    class { 'kubernetes':
+      worker  => true,
+      require => [
+        Class['selinux'],
+        File['/etc/hosts']
+      ]
     }
   }
 }
