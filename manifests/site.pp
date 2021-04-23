@@ -31,7 +31,7 @@ END
     class { 'helm':
       require => [Class['kubernetes']]
     }
-  } else {
+  } elsif 'worker' in $tags {
     class { 'kubernetes':
       worker  => true,
       require => [
