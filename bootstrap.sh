@@ -11,6 +11,8 @@ EOF
 yum -y install docker-ce
 yum -y install PyYAML
 
+systemctl start docker
+
 k8s_version="1.20.0"
 controllers=$(python bootstrap/controllers.py)
 kubetool_version=$(grep 'puppetlabs-kubernetes' Puppetfile| cut -d, -f2 | sed -e 's/^ //g' -e "s/'//g")
