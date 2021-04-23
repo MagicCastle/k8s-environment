@@ -1,7 +1,7 @@
 node /master\d+/ {
   package {'vim':}
 
-  class { 'selinux': 
+  class { 'selinux':
     mode => 'disabled'
   }
 
@@ -18,17 +18,22 @@ END
     content => inline_template($host_template)
   }
 
-  class { 'kubernetes': 
+  class { 'kubernetes':
     controller => true,
-    require    => [Class['selinux'], File['/etc/hosts']]
+    require    => [
+      Class['selinux'],
+      File['/etc/hosts']
+    ]
   }
-  include 'helm'
+  class { 'helm':
+    require => [Class['helm']]
+  }
 }
 
 node default {
   package {'vim':}
 
-  class { 'selinux': 
+  class { 'selinux':
     mode => 'disabled'
   }
 
@@ -45,8 +50,8 @@ END
     content => inline_template($host_template)
   }
 
-  class { 'kubernetes': 
-    worker   => true,
-    require  => [Class['selinux'], File['/etc/hosts']]
+  class { 'kubernetes':
+    worker  => true,
+    require => [Class['selinux'], File['/etc/hosts']]
   }
 }
