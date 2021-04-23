@@ -8,9 +8,13 @@ defaults:
   # datadir: data
   # data_hash: yaml_data
 hierarchy:
+  - name: "Host data"
+    paths:
+      - "%{::hostname}.yaml"
   - name: "Terraform data"
     paths:
       - "terraform_data.yaml"
   - name: "Other YAML hierarchy levels"
     paths:
       - "common.yaml"
+      - "k8s.yaml"
