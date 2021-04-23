@@ -28,9 +28,6 @@ END
         File['/etc/hosts']
       ]
     }
-    class { 'helm':
-      require => [Class['kubernetes']]
-    }
   } elsif 'worker' in $tags {
     class { 'kubernetes':
       worker  => true,
