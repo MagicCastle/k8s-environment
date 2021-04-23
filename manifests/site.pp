@@ -26,7 +26,7 @@ END
     ]
   }
   class { 'helm':
-    require => [Class['helm']]
+    require => [Class['kubernetes']]
   }
 }
 
