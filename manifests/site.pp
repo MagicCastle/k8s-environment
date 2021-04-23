@@ -1,4 +1,4 @@
-node master1 {
+node /master\d+/ {
   package {'vim':}
 
   class { 'selinux': 
@@ -11,3 +11,15 @@ node master1 {
   }
 }
 
+node default {
+  package {'vim':}
+
+  class { 'selinux': 
+    mode => 'disabled'
+  }
+
+  class { 'kubernetes': 
+    worker => true,
+    require    => Class['selinux']
+  }
+}
