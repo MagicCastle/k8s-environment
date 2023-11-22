@@ -15,9 +15,22 @@ $host_template = @(END)
 <% end -%>
 END
 
+$config_containerd = @(END)
+disabled_plugins = []
+END
+
   file { '/etc/hosts':
     ensure  => file,
     content => inline_template($host_template)
+  }
+
+  file { '/etc/containerd':
+    ensure => 'directory',
+  }
+
+  file { '/etc/containerd/config.toml':
+    ensure  => file,
+    content => inline_template($config_containerd)
   }
 
   if 'controller' in $tags {

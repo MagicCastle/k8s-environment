@@ -1,20 +1,23 @@
 #!/bin/bash
 cat << EOF > /etc/yum.repos.d/docker.repo
-[docker]
-name=Docker repo
-baseurl=https://download.docker.com/linux/centos/7/x86_64/stable
-gpgkey=https://download.docker.com/linux/centos/gpg
+[docker-ce-stable]
+name=Docker CE Stable - \$basearch
+baseurl=https://download.docker.com/linux/centos/\$releasever/\$basearch/stable
 enabled=1
 gpgcheck=1
+gpgkey=https://download.docker.com/linux/centos/gpg
 EOF
 
 yum -y install docker-ce
-yum -y install PyYAML
+yum -y install python36
 
-systemctl start docker
+sed -i -e 's/disabled_plugins/#disabled_plugins/' /etc/containerd/config.toml
+systemctl restart containerd
 
-k8s_version="1.20.0"
-controllers=$(python bootstrap/controllers.py)
+systemctl start docker && systemctl enable docker
+
+k8s_version="1.28.0"
+controllers=$(python3 bootstrap/controllers.py)
 kubetool_version=$(grep 'puppetlabs-kubernetes' Puppetfile| cut -d, -f2 | sed -e 's/^ //g' -e "s/'//g")
 
 docker run --rm -v $(pwd)/data:/mnt \
