@@ -1,20 +1,9 @@
 #!/bin/bash
-cat << EOF > /etc/yum.repos.d/docker.repo
-[docker-ce-stable]
-name=Docker CE Stable - \$basearch
-baseurl=https://download.docker.com/linux/centos/\$releasever/\$basearch/stable
-enabled=1
-gpgcheck=1
-gpgkey=https://download.docker.com/linux/centos/gpg
-EOF
-
-yum -y install docker-ce
 yum -y install python36
 
-sed -i -e 's/disabled_plugins/#disabled_plugins/' /etc/containerd/config.toml
-systemctl restart containerd
-
-systemctl start docker && systemctl enable docker
+puppet apply /etc/puppetlabs/code/environments/main/manifests/site.pp  --tags mc_bootstrap
+puppet apply /etc/puppetlabs/code/environments/main/manifests/site.pp  --tags kubernetes::repos
+puppet apply /etc/puppetlabs/code/environments/main/manifests/site.pp  --tags kubernetes::packages
 
 k8s_version="1.28.0"
 controllers=$(python3 bootstrap/controllers.py)
