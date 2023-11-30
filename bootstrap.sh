@@ -1,23 +1,14 @@
 #!/bin/bash
 yum -y install python36
 
-puppet apply /etc/puppetlabs/code/environments/main/manifests/site.pp  --tags mc_bootstrap
-puppet apply /etc/puppetlabs/code/environments/main/manifests/site.pp  --tags kubernetes::repos
-puppet apply /etc/puppetlabs/code/environments/main/manifests/site.pp  --tags kubernetes::packages
+curl -L https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssl_1.6.4_linux_amd64 -o /usr/local/bin/cfssl
+curl -L https://github.com/cloudflare/cfssl/releases/download/v1.6.4/cfssljson_1.6.4_linux_amd64 -o /usr/local/bin/cfssljson
+chmod +x /usr/local/bin/cfssl /usr/local/bin/cfssljson
+/opt/puppetlabs/puppet/bin/gem install slop
 
-k8s_version="1.28.0"
 controllers=$(python3 bootstrap/controllers.py)
-kubetool_version=$(grep 'puppetlabs-kubernetes' Puppetfile| cut -d, -f2 | sed -e 's/^ //g' -e "s/'//g")
+export OS=centos
+export ETCD_INITIAL_CLUSTER=${controllers}
+/opt/puppetlabs/puppet/bin/ruby /etc/puppetlabs/code/environments/production/modules/kubernetes/tooling/kube_tool.rb
 
-docker run --rm -v $(pwd)/data:/mnt \
-    -e OS=centos\
-    -e VERSION=${k8s_version}\
-    -e CONTAINER_RUNTIME=docker\
-    -e CNI_PROVIDER=flannel\
-    -e ETCD_INITIAL_CLUSTER=${controllers}\
-    -e ETCD_IP="%{networking.ip}"\
-    -e KUBE_API_ADVERTISE_ADDRESS="%{networking.ip}"\
-    -e INSTALL_DASHBOARD=true\
-    puppet/kubetool:${kubetool_version}
-
-mv data/Centos.yaml data/k8s.yaml
+python3 bootstrap/merge_yaml.py
