@@ -1,0 +1,12 @@
+kubernetes::kubernetes_version: 1.28.0
+kubernetes::kubernetes_package_version: "%{alias('kubernetes::kubernetes_version')}"
+kubernetes::container_runtime: docker
+kubernetes::cni_network_provider: https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+kubernetes::cni_pod_cidr: 10.244.0.0/16
+kubernetes::cni_provider: flannel
+kubernetes::etcd_ip: "%{networking.ip}"
+kubernetes::kube_api_advertise_address: "%{networking.ip}"
+kubernetes::install_dashboard: true
+
+kubernetes::etcd_peers: "%{alias('terraform.tag_ip.controller')}"
+kubernetes::controller_address: "%{lookup('terraform.tag_ip.controller.0')}:6443"

@@ -1,6 +1,24 @@
 node default {
   package {'vim':}
 
+$config_containerd = @(END)
+disabled_plugins = []
+END
+
+  file { '/etc/containerd':
+    ensure => 'directory',
+  }
+
+  file { '/etc/containerd/config.toml':
+    ensure  => file,
+    content => inline_template($config_containerd),
+    require => File['/etc/containerd'],
+  }
+
+  class { 'docker':
+    require => File['/etc/containerd/config.toml'],
+  }
+
   class { 'selinux':
     mode => 'disabled'
   }
