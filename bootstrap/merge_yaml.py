@@ -8,7 +8,7 @@ except ImportError:
 with open('data/k8s_base.yaml') as f:
     base = load(f)
 
-with open('Centos.yaml') as f:
+with open('data/Centos.yaml') as f:
     certificates = load(f)
 
 for k, v in certificates.items():
