@@ -14,3 +14,6 @@ pushd data
 popd
 
 python3 bootstrap/merge_yaml.py
+
+# Clean up
+rm ./data/Centos.yaml
