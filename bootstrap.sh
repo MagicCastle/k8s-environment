@@ -12,3 +12,4 @@ export ETCD_INITIAL_CLUSTER=${controllers}
 /opt/puppetlabs/puppet/bin/ruby /etc/puppetlabs/code/environments/production/modules/kubernetes/tooling/kube_tool.rb
 
 python3 bootstrap/merge_yaml.py
+cp *.yaml ./data

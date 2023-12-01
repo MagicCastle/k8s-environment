@@ -1,6 +1,10 @@
 #!/bin/python
 
-from yaml import load
+try:
+    from yaml import full_load as load
+except ImportError:
+    # Support old version of pyYaml
+    from yaml import load
 
 with open('data/terraform_data.yaml') as file:
     data = load(file)
