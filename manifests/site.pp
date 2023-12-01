@@ -38,21 +38,8 @@ END
     content => inline_template($host_template)
   }
 
-  $api_server_count = size(lookup('terraform.tag_ip.controller'))
-
-  $filteredControllers = $instances.filter |$name, $info| {
-    'controller' in $info['tags']
-  }
-  $controllersIps = $filteredControllers.map |$name, $info| {
-    "${name}:${info['local_ip']}"
-  }
-
-  $etcd_initial_cluster = $controllersIps.join(',')
-
   if 'controller' in $tags {
     class { 'kubernetes':
-      api_server_count => $api_server_count,
-      etcd_initial_cluster => $etcd_initial_cluster,
       controller => true,
       require    => [
         Class['selinux'],
@@ -61,8 +48,6 @@ END
     }
   } elsif 'worker' in $tags {
     class { 'kubernetes':
-      api_server_count => $api_server_count,
-      etcd_initial_cluster => $etcd_initial_cluster,
       worker  => true,
       require => [
         Class['selinux'],

@@ -9,7 +9,8 @@ chmod +x /usr/local/bin/cfssl /usr/local/bin/cfssljson
 controllers=$(python3 bootstrap/controllers.py)
 export OS=centos
 export ETCD_INITIAL_CLUSTER=${controllers}
+pushd data
 /opt/puppetlabs/puppet/bin/ruby /etc/puppetlabs/code/environments/production/modules/kubernetes/tooling/kube_tool.rb
+popd
 
 python3 bootstrap/merge_yaml.py
-cp *.yaml ./data
