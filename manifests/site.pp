@@ -38,6 +38,23 @@ END
     content => inline_template($host_template)
   }
 
+  $tags = lookup("terraform.instances.${::hostname}.tags")
+        $pool_instances = $instances.filter |$name, $instance| {
+          'pool' in $instance['tags']
+        }
+        $yaml_content = $pool_instances.map |$name, $instance| {
+          {
+            $name => {
+              'specs' => $instance['specs'],
+            },
+          }
+        }.to_yaml
+
+        notify{yaml_content:}
+        file { '/tmp/test.yaml':
+          content => $yaml_content,
+        }
+
   if 'controller' in $tags {
     class { 'kubernetes':
       controller => true,
