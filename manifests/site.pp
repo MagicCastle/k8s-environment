@@ -38,7 +38,6 @@ END
     content => inline_template($host_template)
   }
 
-  $tags = lookup("terraform.instances.${::hostname}.tags")
         $pool_instances = $instances.filter |$name, $instance| {
           'pool' in $instance['tags']
         }
