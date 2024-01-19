@@ -36,17 +36,15 @@ class autoscaler ()
   }
 
   exec { 'autoscaler_config':
-    command     => 'kubectl create cm externalgrpc-autoscaler-cluster-config --from-file=autoscaler.yaml --namespace=kube-system -o yaml',
+    command     => 'kubectl create cm externalgrpc-autoscaler-cluster-config --from-file=autoscaler.yaml --namespace=kube-system -o yaml --dry-run | kubectl apply -f -',
     path        => ['/usr/bin'],
     cwd         => '/etc/kubernetes/',
     environment => ['KUBECONFIG=/etc/kubernetes/admin.conf'],
     refreshonly => true,
+    subscribe   => File['/etc/kubernetes/autoscaler.yaml'],
     tries       => 4,
     try_sleep   => 15,
     timeout     => 15,
-    require     => [
-      File['/etc/kubernetes/autoscaler.yaml']
-    ],
   }
 
   exec { 'autoscaler_deploy':
@@ -55,13 +53,12 @@ class autoscaler ()
     cwd         => '/etc/kubernetes/k8s-autoscaler/deploy',
     environment => ['KUBECONFIG=/etc/kubernetes/admin.conf'],
     refreshonly => true,
+    subscribe   => Vcsrepo['/etc/kubernetes/k8s-autoscaler'],
     tries       => 4,
     try_sleep   => 15,
     timeout     => 15,
     require     => [
       Exec['autoscaler_config'],
-      Vcsrepo['/etc/kubernetes/k8s-autoscaler'],
-      File['/etc/kubernetes/autoscaler.yaml']
     ],
   }
 }
