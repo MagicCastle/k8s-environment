@@ -12,5 +12,5 @@ mod 'puppetlabs-stdlib', '6.6.0'
 mod 'puppet-augeasproviders_sysctl', '3.2.0'
 mod 'puppet-augeasproviders_core', '3.2.1'
 mod 'puppet-kmod', '3.2.0'
-mod 'puppetlabs-vcsrepo' '6.1.0'
+mod 'puppetlabs-vcsrepo', '6.1.0'
 
