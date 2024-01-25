@@ -7,6 +7,7 @@ kubernetes::cni_provider: flannel
 kubernetes::etcd_ip: "%{networking.ip}"
 kubernetes::kube_api_advertise_address: "%{networking.ip}"
 kubernetes::install_dashboard: true
+kubernetes::ttl: 0h
 
 kubernetes::etcd_peers: "%{alias('terraform.tag_ip.controller')}"
 kubernetes::controller_address: "%{lookup('terraform.tag_ip.controller.0')}:6443"

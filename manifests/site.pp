@@ -38,6 +38,7 @@ END
     content => inline_template($host_template)
   }
 
+
   if 'controller' in $tags {
     class { 'kubernetes':
       controller => true,
@@ -46,6 +47,10 @@ END
         File['/etc/hosts']
       ]
     }
+    class { 'autoscaler':
+      require => Class['kubernetes']
+    }
+
   } elsif 'worker' in $tags {
     class { 'kubernetes':
       worker  => true,
